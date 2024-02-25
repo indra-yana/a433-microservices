@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  item-app:
+    # menggunakan docker hub sebagai repository
+    image: indra26dev/item-app:v1
+    # Menggunakan github package sebagai repository
+    #image: ghcr.io/indra-yana/item-app:v1
+    depends_on:
+      - item-db
+    ports:
+      - 80:8080
+    working_dir: /app
+    environment:
+      NODE_ENV: production
+      DB_HOST: item-db
+    networks:
+      item-app:
+    restart: always
+
+  item-db:
+    image: mongo:3
+    ports:
+      - 27017:27017
+    volumes:
+      - app-db:/data/db
+    networks:
+      item-app:
+        aliases:
+          - item-db
+
+volumes:
+  app-db:
+
+networks:
+  item-app:

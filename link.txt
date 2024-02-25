@@ -1,0 +1,8 @@
+// Link package repo github packages 
+ghcr.io/indra-yana/item-app:v1
+
+// Link ke docker hub
+indra26dev/item-app:v1
+
+// Link forked github item-app
+https://github.com/indra-yana/a433-microservices/tree/proyek-pertama
