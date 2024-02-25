@@ -3,9 +3,9 @@ version: "3.7"
 services:
   item-app:
     # menggunakan docker hub sebagai repository
-    image: indra26dev/item-app:v1
+    #image: indra26dev/item-app:v1
     # Menggunakan github package sebagai repository
-    #image: ghcr.io/indra-yana/item-app:v1
+    image: ghcr.io/indra-yana/item-app:v1
     depends_on:
       - item-db
     ports:
