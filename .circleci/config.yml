@@ -19,7 +19,7 @@ jobs:
       - run:
           name: "Test app"
           command: "go test -v -short --count=1 $(go list ./...)"
-  bulid-app-karsajobs:
+  build-app-karsajobs:
     docker:
        - image: cimg/base:stable
     steps:
