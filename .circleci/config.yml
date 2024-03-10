@@ -1,0 +1,34 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@2.2.0
+jobs:
+  lint-dockerfile:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/dockerlint:
+          dockerfile: ./Dockerfile
+          treat-warnings-as-errors: true
+  bulid-app-karsajobs-ui:
+    docker:
+       - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Docker build"
+          command: "docker build -t karsajobs-ui:latest ."
+      - run:
+          name: "Docker rename"
+          command: "docker tag karsajobs-ui:latest ghcr.io/indra-yana/karsajobs-ui:latest"
+      - run:
+          name: "Docker login"
+          command: "echo $GHCR_PAT | docker login ghcr.io -u indra-yana --password-stdin"
+      - run:
+          name: "Docker push"
+          command: "docker push ghcr.io/indra-yana/karsajobs-ui:latest"
+workflows:
+  karsajobs-ui-workflow:
+    jobs:
+      - lint-dockerfile
+      - build-app-karsajobs-ui
