@@ -9,7 +9,7 @@ jobs:
       - docker/dockerlint:
           dockerfile: ./Dockerfile
           treat-warnings-as-errors: true
-  bulid-app-karsajobs-ui:
+  build-app-karsajobs-ui:
     docker:
        - image: cimg/base:stable
     steps:
