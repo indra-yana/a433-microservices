@@ -6,7 +6,7 @@ docker build -t karsajobs:latest .
 
 # Jeda script!
 echo -e "Please wait to next step...\n"
-sleep 3s
+sleep 1s
 
 #2 Melihat daftar image di lokal.
 echo -e "Show local images"
@@ -14,7 +14,7 @@ docker images
 
 # Jeda script!
 echo -e "Please wait to next step...\n"
-sleep 3s
+sleep 1s
 
 #3 Mengubah nama image agar sesuai dengan format Docker Hub (atau GitHub Packages bila menerapkan saran keempat).
 # jika menggunakan docker hub sebagai repositroy
@@ -25,7 +25,7 @@ docker tag karsajobs:latest ghcr.io/indra-yana/karsajobs:latest
 
 # Jeda script!
 echo -e "Please wait to next step...\n"
-sleep 3s
+sleep 1s
 
 #4 Login ke Docker Hub (atau GitHub Packages bila menerapkan saran keempat) via Terminal.
 # jika menggunakan docker hub
@@ -38,7 +38,7 @@ echo $GHCR_PAT | docker login ghcr.io -u indra-yana --password-stdin
 
 # Jeda script!
 echo -e "Please wait to next step...\n"
-sleep 3s
+sleep 1s
 
 #5 Mengunggah image ke Docker Hub (atau GitHub Packages bila menerapkan saran keempat).
 # jika menggunakan docker hub
@@ -48,7 +48,7 @@ sleep 3s
 docker push ghcr.io/indra-yana/karsajobs:latest
 
 echo -e "Done! Exited...\n"
-sleep 2s
+sleep 1s
 
 exit
 
