@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Mendefinisikan name dan label sebagai penanda
+  name: order
+  labels:
+    app: order
+    tier: producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: producer
+  template:
+    metadata:
+      labels:
+        app: order
+        tier: producer
+    spec:
+      # Mendefiniskan container dan mengunduh image dari github repo
+      containers:
+        - name: order
+          image: ghcr.io/indra-yana/order-service:latest
+          ports:
+            - containerPort: 3000
+          # Mendefinisikan environment variabel yang digunakan aplikasi
+          env:
+            - name: PORT
+              value: '3000'
+            - name: AMQP_URL
+              value: amqp://user:ot00Ra4NH1q7iY73@rabbitmq:5672
+              #value: amqp://guest:guest@rabbitmq:5672

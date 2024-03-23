@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Mendefinisikan name dan label sebagai penanda
+  name: shipping
+  labels:
+    app: shipping
+    tier: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: consumer
+  template:
+    metadata:
+      labels:
+        app: shipping
+        tier: consumer
+    spec:
+      # Mendefiniskan container dan mengunduh image dari github repo
+      containers:
+        - name: shipping
+          image: ghcr.io/indra-yana/shipping-service:latest
+          ports:
+            - containerPort: 3001
+          # Mendefinisikan environment variabel yang digunakan aplikasi
+          env:
+            - name: PORT
+              value: '3001'
+            - name: AMQP_URL
+              value: amqp://user:ot00Ra4NH1q7iY73@rabbitmq:5672
+              #value: amqp://guest:guest@rabbitmq:5672

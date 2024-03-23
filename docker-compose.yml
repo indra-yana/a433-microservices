@@ -1,0 +1,51 @@
+version: "3.2"
+services:
+  # Membuat service rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: 'rabbitmq_container'
+    ports:
+        - 5673:5672
+        - 15673:15672
+    #volumes:
+    #    - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+    #    - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_network
+  # Membuat service order dengan base image dari github package
+  order:
+    image: ghcr.io/indra-yana/order-service:latest
+    restart: always
+    ports:
+      - 3000:3000
+    #volumes:
+    #  - .:/src
+    # Service akan dijalankan ketika rabbitmq sudah dibuat
+    depends_on:
+      - rabbitmq
+    environment:
+      PORT: 3000
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+    networks:
+      - rabbitmq_network
+  # Membuat service shipping dengan base image dari github package
+  shipping:
+    image: ghcr.io/indra-yana/shipping-service:latest
+    restart: always
+    ports:
+      - 3001:3001
+    #volumes:
+    #  - .:/src
+    # Service akan dijalankan ketika rabbitmq sudah dibuat
+    depends_on:
+      - rabbitmq
+    environment:
+      PORT: 3001
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+    networks:
+      - rabbitmq_network
+
+# Membuat network untuk semua services dengan type bridge
+networks:
+  rabbitmq_network:
+    driver: bridge

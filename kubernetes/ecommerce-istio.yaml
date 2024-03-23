@@ -1,0 +1,133 @@
+# Order service @Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  labels:
+    app: order
+    service: order
+spec:
+  ports:
+  - port: 3000
+    name: http
+  selector:
+    app: order
+---
+
+# Order service @ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ecommerce-order
+  labels:
+    account: order
+---
+
+# Order service @Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-v1
+  labels:
+    app: order
+    version: v1
+spec:
+  # Menentukan jumlah replika aplikasi 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: order
+        version: v1
+    spec:
+      serviceAccountName: ecommerce-order
+       # Mendefiniskan container dan mengunduh image dari github repo
+      containers:
+      - name: order
+        image: ghcr.io/indra-yana/order-service:latest
+        # Menggunakan image pull policy IfNotPresent jika sudah ada di local maka tidak akan mengunduh kembali
+        imagePullPolicy: IfNotPresent
+        # Mendefinisikan environment variabel yang digunakan aplikasi
+        ports:
+        - containerPort: 3000
+        # Mendefinsikan environtment variable yang digunakan aplikasi
+        env:
+        - name: PORT
+          value: '3000'
+        - name: AMQP_URL
+          value: amqp://user:ot00Ra4NH1q7iY73@rabbitmq:5672
+        securityContext:
+          runAsUser: 1000
+---
+
+##############################################################################
+
+# Shipping service @Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  labels:
+    app: shipping
+    service: shipping
+spec:
+  ports:
+  - port: 3001
+    name: http
+  selector:
+    app: shipping
+---
+
+# Shipping service @ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ecommerce-shipping
+  labels:
+    account: shipping
+---
+
+# Shipping service @Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-v1
+  labels:
+    app: shipping
+    version: v1
+spec:
+  # Menentukan jumlah replika aplikasi 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipping
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: shipping
+        version: v1
+    spec:
+      serviceAccountName: ecommerce-shipping
+      # Mendefiniskan container dan mengunduh image dari github repo
+      containers:
+      - name: shipping
+        image: ghcr.io/indra-yana/shipping-service:latest
+        # Menggunakan image pull policy IfNotPresent jika sudah ada di local maka tidak akan mengunduh kembali
+        imagePullPolicy: IfNotPresent
+        # Mendefinisikan environment variabel yang digunakan aplikasi
+        ports:
+        - containerPort: 3001
+        # Mendefinsikan environtment variable yang digunakan aplikasi
+        env:
+        - name: PORT
+          value: '3001'
+        - name: AMQP_URL
+          value: amqp://user:ot00Ra4NH1q7iY73@rabbitmq:5672
+        securityContext:
+          runAsUser: 1000
+---
